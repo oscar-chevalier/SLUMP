@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from typing import List, Union, Tuple
 
-from slump.Syntaxic_tree.extents import Extent
+from slump.Syntaxic_tree.extent import Extent
 
 
 class UnaryOperator:
@@ -200,7 +200,7 @@ class AssignmentStatement(Statement):
         return other.lhs == self.lhs and other.rhs == self.rhs and super(AssignmentStatement, self).__eq__(other)
 
     def __repr__(self):
-        return f'AssigmentStatement({self.lhs!r}, {self.rhs!r}, {self.extent!r})'
+        return f'AssignmentStatement({self.lhs!r}, {self.rhs!r}, {self.extent!r})'
 
 
 class ExpressionStatement(Statement):
@@ -232,18 +232,19 @@ class ReturnStatement(Statement):
 
 
 class FunctionDefinition:
-    def __init__(self, name: str, argument_list: List[str], body: List[Statement]):
+    def __init__(self, name: str, argument_list: List[str], body: List[Statement], extent: Extent):
         self.name = name
         self.argument_list = argument_list
         self.body = body
+        self.extent = extent
 
     def __eq__(self, other):
         if not isinstance(other, FunctionDefinition):
             return False
-        return self.name == other.name and self.argument_list == other.argument_list and self.body == other.body
+        return self.name == other.name and self.argument_list == other.argument_list and self.body == other.body and self.extent == other.extent
 
     def __repr__(self):
-        return f'FunctionDefinition({self.name!r}, {self.argument_list!r}, {self.body!r})'
+        return f'FunctionDefinition({self.name!r}, {self.argument_list!r}, {self.body!r}, {self.extent!r})'
 
 
 class Toplevel:

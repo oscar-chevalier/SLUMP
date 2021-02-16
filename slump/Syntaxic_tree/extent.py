@@ -5,14 +5,21 @@ class Locus:
         self.column = column
 
     def __repr__(self):
-        return f'Locus({self.filename}, {self.line}, {self.column})'
+        return f'Locus({self.filename!r}, {self.line!r}, {self.column!r})'
 
     def __str__(self):
         return f'{self.filename}:{self.line}.{self.column}'
 
+    def __eq__(self, other):
+        if not isinstance(other, Locus):
+            return False
+        return self.filename == other.filename and self.line == other.line and self.column == other.column
+
 
 class Extent:
     def __init__(self, begin: Locus, end: Locus):
+        assert isinstance(begin, Locus), begin
+        assert isinstance(end, Locus), end
         self.begin: Locus = begin
         self.end: Locus = end
 
@@ -33,3 +40,8 @@ class Extent:
                 return f'{self.begin.filename}:{self.begin.line}.{self.begin.column}-{self.end.column}'
             return f'{self.begin.filename}:{self.begin.line}.{self.begin.column}-{self.end.line}.{self.end.column}'
         return f'{self.begin.filename}:{self.begin.line}.{self.begin.column}-{self.end.filename}:{self.end.line}.{self.end.column}'
+
+    def __eq__(self, other):
+        if not isinstance(other, Extent):
+            return False
+        return self.begin == other.begin and self.end == other.end

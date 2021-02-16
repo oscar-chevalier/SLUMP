@@ -95,7 +95,7 @@ class SlumpParser(Parser):
        'additive_expression "-" multiplicative_expression')
     def additive_expression(self, p):
         op_extent = self.create_extent(p, 1, 1)
-        ex_extent = Extent(p.additive_expression.extent, p.multiplicative_expression.extent)
+        ex_extent = Extent.fromto(p.additive_expression.extent, p.multiplicative_expression.extent)
         return BinaryExpression(p.additive_expression, BinaryOperator(p[1], op_extent), p.multiplicative_expression, ex_extent)
 
     @_('additive_expression')
@@ -304,7 +304,10 @@ class SlumpParser(Parser):
 
     @_('FUN ID "(" list_id ")" "{" function_body "}"')
     def function_def(self, p):
-        return FunctionDefinition(p.ID, p.list_id, p.function_body)
+        left_extent = self.create_extent(p, 0, 3)
+        right_extent = self.create_extent(p, 7, 1)
+        extent = Extent.fromto(left_extent, right_extent)
+        return FunctionDefinition(p.ID, p.list_id, p.function_body, extent)
 
     @_('function_def')
     def toplevel_element(self, p):
